@@ -1,13 +1,13 @@
 "use client";
 
-import Loader from '../../Loader';
-import ErrorMessage from '../../ErrorMessage';
+import Loader from '../../../../components/Loader';
+import ErrorMessage from '../../../../components/ErrorMessage';
 import PageNavigation from './PageNavigation';
 import SortOrder from './SortOrder';
 import PerPageChanger from './PerPageChanger';
 import Search from './Search';
 import List from './List';
-import { useCoinList } from '@/app/hooks/useCoinList';
+import { useCoinList } from '@/app/coin/hooks/useCoinList';
 
 export default function CoinList() {
   const { state, dispatch, fetchCoinsMarkets } = useCoinList();

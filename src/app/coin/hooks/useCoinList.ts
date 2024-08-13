@@ -1,5 +1,5 @@
 import { useReducer, useEffect } from 'react';
-import { CoinMarket } from '@/app/interfaces/api/CoinAPIResponse';
+import { CoinMarket } from '@/app/coin/interfaces/CoinAPIResponse';
 
 // Define the initial state and reducer function
 interface State {
