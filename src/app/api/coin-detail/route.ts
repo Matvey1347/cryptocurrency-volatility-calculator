@@ -1,7 +1,7 @@
 import { AppCoinData, CoinGeckoSingleResponse } from '@/app/coin/interfaces/CoinAPIResponse';
 import { NextResponse } from 'next/server';
 
-const data = {
+let data = {
   "id": "ethereum",
   "symbol": "eth",
   "name": "Ethereum",
@@ -4918,15 +4918,15 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: 'Please provide id' }, { status: 400 });
   }
 
-  // const response = await fetch(
-  //   `https://api.coingecko.com/api/v3/coins/${id}`
-  // );
+  const response = await fetch(
+    `https://api.coingecko.com/api/v3/coins/${id}`
+  );
 
-  // if (!response.ok) {
-  //   return NextResponse.json({ error: 'Failed to fetch data from CoinGecko' }, { status: 500 });
-  // }
+  if (!response.ok) {
+    return NextResponse.json({ error: 'Failed to fetch data from CoinGecko' }, { status: 500 });
+  }
 
-  // const data = await response.json();
+  data = await response.json();
   const transformedData = transformCoinGeckoData(data);
 
   return NextResponse.json(transformedData);
