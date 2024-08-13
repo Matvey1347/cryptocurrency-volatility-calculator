@@ -63,3 +63,9 @@ export interface AppCoinData {
     low_24h: number,
   }
 }
+
+export interface MarketChart {
+  prices: [number, number][],
+  market_caps: [number, number][],
+  total_volumes: [number, number][]
+}

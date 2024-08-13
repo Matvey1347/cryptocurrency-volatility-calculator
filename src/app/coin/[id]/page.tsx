@@ -1,5 +1,8 @@
-import { AppCoinData } from '@/app/coin/interfaces/CoinAPIResponse';
+"use client";
+import { AppCoinData, MarketChart } from '@/app/coin/interfaces/CoinAPIResponse';
 import Categories from './components/Categories';
+import { useEffect, useState } from 'react';
+import Loader from '@/components/Loader';
 
 async function getCoinData(id: string): Promise<AppCoinData | null> {
   try {
@@ -16,8 +19,44 @@ async function getCoinData(id: string): Promise<AppCoinData | null> {
   }
 }
 
-export default async function CoinPage({ params }: { params: { id: string } }) {
-  const coin = await getCoinData(params.id);
+async function getMarketChart(id: string, days: number): Promise<MarketChart | null> {
+  try {
+    const res = await fetch(`http://localhost:3000/api/coin-market-chart?id=${id}&days=${days}`, { cache: 'no-store' });
+
+    if (!res.ok) {
+      return null;
+    }
+    const coin: MarketChart = await res.json();
+    return coin;
+  } catch (error) {
+    console.error('Failed to fetch coin market chart:', error);
+    return null;
+  }
+}
+
+export default function CoinPage({ params }: { params: { id: string } }) {
+  const [loading, setLoading] = useState(true);
+  const [coin, setCoin] = useState<AppCoinData | null>(null);
+  const [marketChart, setMarketChart] = useState<MarketChart | null>(null);
+
+  useEffect(() => {
+    setLoading(true);
+    async function fetchData() {
+      const fetchedCoin = await getCoinData(params.id);
+      setCoin(fetchedCoin);
+
+      const fetchedMarketChart = await getMarketChart(params.id, 30);
+      setMarketChart(fetchedMarketChart);
+
+      setLoading(false);
+    }
+
+    fetchData();
+  }, [params.id]);
+
+  if (loading) {
+    return <Loader loading={loading} />
+  }
 
   if (!coin || !coin.name) {
     return <main className="container mx-auto p-4">Coin data not available</main>;
@@ -33,6 +72,9 @@ export default async function CoinPage({ params }: { params: { id: string } }) {
         </span>
       </div>
       <Categories categories={coin.categories} />
+      <pre>
+        {marketChart ? JSON.stringify(marketChart, null, 2) : '{}'}
+      </pre>
     </main>
   );
 }
