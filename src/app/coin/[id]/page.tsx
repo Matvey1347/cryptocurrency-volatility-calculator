@@ -3,6 +3,7 @@ import { AppCoinData, MarketChart } from '@/app/coin/interfaces/CoinAPIResponse'
 import Categories from './components/Categories';
 import { useEffect, useState } from 'react';
 import Loader from '@/components/Loader';
+import { useCoinData } from '../hooks/useCoinData';
 
 async function getCoinData(id: string): Promise<AppCoinData | null> {
   try {
@@ -35,24 +36,7 @@ async function getMarketChart(id: string, days: number): Promise<MarketChart | n
 }
 
 export default function CoinPage({ params }: { params: { id: string } }) {
-  const [loading, setLoading] = useState(true);
-  const [coin, setCoin] = useState<AppCoinData | null>(null);
-  const [marketChart, setMarketChart] = useState<MarketChart | null>(null);
-
-  useEffect(() => {
-    setLoading(true);
-    async function fetchData() {
-      const fetchedCoin = await getCoinData(params.id);
-      setCoin(fetchedCoin);
-
-      const fetchedMarketChart = await getMarketChart(params.id, 30);
-      setMarketChart(fetchedMarketChart);
-
-      setLoading(false);
-    }
-
-    fetchData();
-  }, [params.id]);
+  const { loading, coin, marketChart, error } = useCoinData(params.id);
 
   if (loading) {
     return <Loader loading={loading} />
