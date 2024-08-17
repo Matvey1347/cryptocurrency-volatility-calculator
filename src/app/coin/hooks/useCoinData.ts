@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { AppCoinData, CryptoCompareHistoryItem, MarketChart } from '@/app/coin/interfaces/CoinAPIResponse';
+import { useCallback, useEffect, useState } from 'react';
+import { AppCoinData, CryptoCompareHistoryItem } from '@/app/coin/interfaces/CoinAPIResponse';
 
 async function getCoinData(id: string): Promise<AppCoinData | null> {
   try {
@@ -31,38 +31,42 @@ async function getCoinHistory(symbol: string, limit: number): Promise<CryptoComp
   }
 }
 
-export function useCoinData(id: string) {
+export function useCoinData(id: string, limit: number) {
   const [loading, setLoading] = useState(true);
+  const [loadingHistory, setLoadingHistory] = useState(true);
   const [coin, setCoin] = useState<AppCoinData | null>(null);
   const [coinHistory, setCoinHistory] = useState<CryptoCompareHistoryItem[] | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
+  const fetchData = useCallback(async () => {
     setLoading(true);
-    setError(null);
+    setLoadingHistory(true);
+    try {
+      const coinData = await getCoinData(id);
+      setCoin(coinData);
+      setLoading(false);
 
-    async function fetchData() {
-      try {
-        const fetchedCoin = await getCoinData(id);
-        if (!fetchedCoin) {
-          throw new Error('Failed to fetch coin data');
-        }
-        setCoin(fetchedCoin);
+      const history = await getCoinHistory(coinData?.symbol || '', limit);
+      setCoinHistory(history);
+      setLoadingHistory(false);
 
-        const history = await getCoinHistory(fetchedCoin.symbol, 10);
-        if (!history) {
-          throw new Error('Failed to fetch market chart data');
-        }
-        setCoinHistory(history);
-      } catch (err: any) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
+    } catch (err: any) {
+      setError(err.message);
+      setLoading(false);
+      setLoadingHistory(false);
     }
-
-    fetchData();
   }, [id]);
 
-  return { loading, coin, coinHistory, error };
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+
+  async function getHistoryByLimit(newLimit: number) {
+    setLoadingHistory(true);
+    const history = await getCoinHistory(coin?.symbol || '', newLimit);
+    setCoinHistory(history);
+    setLoadingHistory(false);
+  }
+
+  return { loading, loadingHistory, coin, coinHistory, error, updateHistory: getHistoryByLimit };
 }

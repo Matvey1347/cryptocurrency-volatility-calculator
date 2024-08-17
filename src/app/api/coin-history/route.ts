@@ -18,7 +18,9 @@ export async function GET(request: Request): Promise<NextResponse>{
     return NextResponse.json({ error: 'Failed to fetch data from CryptoCompare' }, { status: 500 });
   }
   const data = await response.json();
-  const history: CryptoCompareHistoryItem[] = data.Data.Data.map((item: any) => ({
+  const history: CryptoCompareHistoryItem[] = data.Data.Data
+    .filter((item: CryptoCompareHistoryItem) => item.open !== 0 || item.close !== 0)
+    .map((item: CryptoCompareHistoryItem) => ({
     time: item.time,
     high: item.high,
     low: item.low,

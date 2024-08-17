@@ -1,4 +1,3 @@
-import { AppCoinData, CoinGeckoSingleResponse } from '@/app/coin/interfaces/CoinAPIResponse';
 import { transformCoinGeckoData } from '@/utils/marketDataUtils';
 import { NextResponse } from 'next/server';
 
@@ -2362,15 +2361,15 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: 'Please provide id' }, { status: 400 });
   }
 
-  // const response = await fetch(
-  //   `https://api.coingecko.com/api/v3/coins/${id}`
-  // );
+  const response = await fetch(
+    `https://api.coingecko.com/api/v3/coins/${id}`
+  );
 
-  // if (!response.ok) {
-  //   return NextResponse.json({ error: 'Failed to fetch data from CoinGecko' }, { status: 500 });
-  // }
+  if (!response.ok) {
+    return NextResponse.json({ error: 'Failed to fetch data from CoinGecko' }, { status: 500 });
+  }
 
-  // data = await response.json();
+  data = await response.json();
   const transformedData = transformCoinGeckoData(data);
 
   return NextResponse.json(transformedData);

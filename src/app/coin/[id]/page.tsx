@@ -5,16 +5,21 @@ import { useCoinData } from '../hooks/useCoinData';
 import ChartOpenCompareClose from './components/ChartOpenCompareClose';
 import DaysTable from './components/DaysTable';
 import CalculationData from './components/CalculationData';
+import { useState } from 'react';
 
 export default function CoinPage({ params }: { params: { id: string } }) {
-  const { loading, coin, coinHistory, error } = useCoinData(params.id);
+  const [limit, setLimit] = useState(10);
+  const { loading, loadingHistory, coin, coinHistory, error, updateHistory } = useCoinData(params.id, limit);
 
+  const handleApply = () => {
+    updateHistory(limit);
+  };
 
   if (loading) {
     return <Loader loading={loading} />
   }
 
-  if (!coin || !coin.name || !coinHistory) {
+  if (!coin || !coin.name) {
     return <main className="container mx-auto p-4">Coin data not available</main>;
   }
 
@@ -27,13 +32,38 @@ export default function CoinPage({ params }: { params: { id: string } }) {
           ${coin.market_data.current_price.toFixed(2)}
         </span>
       </div>
-      {/* <Categories categories={coin.categories} /> */}
-      <CalculationData
-        coinHistory={coinHistory ?? null}
-      />
-      <DaysTable
-        coinHistory={coinHistory ?? null}
-      />
+      <div className="flex justify-center items-center mb-4">
+        <input
+          type="number"
+          value={limit}
+          onChange={(e) => {
+            setLimit(Number(e.target.value));
+          }}
+          className="border border-gray-300 rounded px-2 py-1 mr-2"
+          min="1"
+          max="365"
+        />
+        <button
+          onClick={handleApply}
+          className="bg-blue-500 text-white rounded px-4 py-2"
+        >
+          Применить
+        </button>
+      </div>
+      {
+        (loadingHistory) ? (
+          <Loader loading={loadingHistory} />
+        ) : (
+          <>
+            <CalculationData
+              coinHistory={coinHistory ?? null}
+            />
+            <DaysTable
+              coinHistory={coinHistory ?? null}
+            />
+          </>
+        )
+      }
       {/* 
       <ChartOpenCompareClose
         priceByDay={coinHistory.priceByDay ?? null}
