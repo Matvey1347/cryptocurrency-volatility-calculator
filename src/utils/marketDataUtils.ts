@@ -1,12 +1,12 @@
-import { AppCoinData, CoinGeckoSingleResponse, DailyCandle, MarketChart, PriceByDay } from "@/app/coin/interfaces/CoinAPIResponse";
+import { AppCoinData, CoinGeckoSingleResponse, CryptoCompareHistoryItem, DailyCandle, MarketChart, PriceByDay } from "@/app/coin/interfaces/CoinAPIResponse";
 
-export function calculateAverageClosePrice(priceByDay: PriceByDay[]): number {
-  if (!priceByDay || priceByDay.length === 0) {
+export function calculateAverageClosePrice(coinHistory: CryptoCompareHistoryItem[]): number {
+  if (!coinHistory || coinHistory.length === 0) {
     throw new Error("No priceByDay data available");
   }
 
-  const totalClosePrice = priceByDay.reduce((sum, day) => sum + day.close, 0);
-  return totalClosePrice / priceByDay.length;
+  const totalClosePrice = coinHistory.reduce((sum, day) => sum + day.close, 0);
+  return totalClosePrice / coinHistory.length;
 }
 
 export function transformCoinGeckoData(data: CoinGeckoSingleResponse): AppCoinData {

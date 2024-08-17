@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { AppCoinData, MarketChart } from '@/app/coin/interfaces/CoinAPIResponse';
+import { AppCoinData, CryptoCompareHistoryItem, MarketChart } from '@/app/coin/interfaces/CoinAPIResponse';
 
 async function getCoinData(id: string): Promise<AppCoinData | null> {
   try {
@@ -16,14 +16,14 @@ async function getCoinData(id: string): Promise<AppCoinData | null> {
   }
 }
 
-async function getMarketChart(id: string, days: number): Promise<MarketChart | null> {
+async function getCoinHistory(symbol: string, limit: number): Promise<CryptoCompareHistoryItem[] | null> {
   try {
-    const res = await fetch(`/api/coin-market-chart?id=${id}&days=${days}`, { cache: 'no-store' });
+    const res = await fetch(`/api/coin-history?symbol=${symbol}&limit=${limit}`, { cache: 'no-store' });
 
     if (!res.ok) {
       throw new Error('Failed to fetch coin market chart');
     }
-    const coin: MarketChart = await res.json();
+    const coin: CryptoCompareHistoryItem[] = await res.json();
     return coin;
   } catch (error) {
     console.error('Failed to fetch coin market chart:', error);
@@ -34,7 +34,7 @@ async function getMarketChart(id: string, days: number): Promise<MarketChart | n
 export function useCoinData(id: string) {
   const [loading, setLoading] = useState(true);
   const [coin, setCoin] = useState<AppCoinData | null>(null);
-  const [marketChart, setMarketChart] = useState<MarketChart | null>(null);
+  const [coinHistory, setCoinHistory] = useState<CryptoCompareHistoryItem[] | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -49,11 +49,11 @@ export function useCoinData(id: string) {
         }
         setCoin(fetchedCoin);
 
-        const fetchedMarketChart = await getMarketChart(id, 30);
-        if (!fetchedMarketChart) {
+        const history = await getCoinHistory(fetchedCoin.symbol, 10);
+        if (!history) {
           throw new Error('Failed to fetch market chart data');
         }
-        setMarketChart(fetchedMarketChart);
+        setCoinHistory(history);
       } catch (err: any) {
         setError(err.message);
       } finally {
@@ -64,5 +64,5 @@ export function useCoinData(id: string) {
     fetchData();
   }, [id]);
 
-  return { loading, coin, marketChart, error };
+  return { loading, coin, coinHistory, error };
 }

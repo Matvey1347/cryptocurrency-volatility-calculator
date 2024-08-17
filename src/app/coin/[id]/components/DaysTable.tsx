@@ -1,16 +1,16 @@
 "use client";
 
-import { PriceByDay } from "../../interfaces/CoinAPIResponse";
+import { CryptoCompareHistoryItem } from "../../interfaces/CoinAPIResponse";
 
 interface DaysTableProps {
-  priceByDay: PriceByDay[] | null
+  coinHistory: CryptoCompareHistoryItem[] | null
 }
 
-export default function DaysTable({ priceByDay }: DaysTableProps) {
-  const sortedPriceByDay = priceByDay ? [...priceByDay].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()) : [];
+export default function DaysTable({ coinHistory }: DaysTableProps) {
+  const sortedCoinHistory = coinHistory ? [...coinHistory].sort((a, b) => b.time - a.time) : [];
 
   return (
-    <div className="overflow-x-auto">
+    <div className="overflow-x-auto mt-4">
       <table className="min-w-full bg-white border border-gray-200">
         <thead>
           <tr className="bg-gray-100 border-b">
@@ -20,19 +20,19 @@ export default function DaysTable({ priceByDay }: DaysTableProps) {
           </tr>
         </thead>
         <tbody>
-          {sortedPriceByDay?.map((item, index) => (
+          {sortedCoinHistory?.map((item, index) => (
             <tr
               key={index}
               className={`border-b hover:bg-gray-50 ${index % 2 === 0 ? 'bg-gray-50' : ''}`}
             >
               <td className="p-4 text-gray-800">
-                {item.date}
+                {new Date(item.time * 1000).toLocaleDateString('en-GB')}
               </td>
               <td className="p-4 text-green-500 font-semibold">
-                ${item.open.toFixed(2)}
+                ${item.open}
               </td>
               <td className="p-4 text-red-500 font-semibold">
-                ${item.close.toFixed(2)}
+                ${item.close}
               </td>
             </tr>
           ))}

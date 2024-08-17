@@ -93,3 +93,16 @@ export interface MarketChart {
   total_volumes: [number, number][];
   priceByDay?: PriceByDay[];
 }
+
+
+export interface CryptoCompareHistoryItem {
+  time: number;
+  high: number;
+  low: number;
+  open: number;
+  volumefrom: number;
+  volumeto: number;
+  close: number;
+  conversionType: string;
+  conversionSymbol: string;
+}

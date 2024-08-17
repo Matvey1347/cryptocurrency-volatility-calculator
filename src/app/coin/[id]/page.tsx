@@ -7,14 +7,14 @@ import DaysTable from './components/DaysTable';
 import CalculationData from './components/CalculationData';
 
 export default function CoinPage({ params }: { params: { id: string } }) {
-  const { loading, coin, marketChart, error } = useCoinData(params.id);
+  const { loading, coin, coinHistory, error } = useCoinData(params.id);
 
 
   if (loading) {
     return <Loader loading={loading} />
   }
 
-  if (!coin || !coin.name || !marketChart) {
+  if (!coin || !coin.name || !coinHistory) {
     return <main className="container mx-auto p-4">Coin data not available</main>;
   }
 
@@ -29,14 +29,14 @@ export default function CoinPage({ params }: { params: { id: string } }) {
       </div>
       {/* <Categories categories={coin.categories} /> */}
       <CalculationData
-        priceByDay={marketChart.priceByDay ?? null}
+        coinHistory={coinHistory ?? null}
       />
       <DaysTable
-        priceByDay={marketChart.priceByDay ?? null}
+        coinHistory={coinHistory ?? null}
       />
       {/* 
       <ChartOpenCompareClose
-        priceByDay={marketChart.priceByDay ?? null}
+        priceByDay={coinHistory.priceByDay ?? null}
       /> */}
     </main>
   );
