@@ -64,8 +64,31 @@ export interface AppCoinData {
   }
 }
 
+// export interface MarketChart {
+//   prices: [number, number][],
+//   market_caps: [number, number][],
+//   total_volumes: [number, number][]
+// }
+
+export interface PriceData {
+  timestamp: number;
+  price: number;
+}
+
+export interface DailyCandle {
+  open: number;
+  close: number;
+}
+
+export interface PriceByDay {
+  date: string;
+  open: number;
+  close: number;
+}
+
 export interface MarketChart {
-  prices: [number, number][],
-  market_caps: [number, number][],
-  total_volumes: [number, number][]
+  prices: [number, number][];
+  market_caps: [number, number][];
+  total_volumes: [number, number][];
+  priceByDay?: PriceByDay[];
 }

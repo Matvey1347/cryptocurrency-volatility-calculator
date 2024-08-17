@@ -1,4 +1,5 @@
 import { AppCoinData, CoinGeckoSingleResponse } from '@/app/coin/interfaces/CoinAPIResponse';
+import { transformCoinGeckoData } from '@/utils/marketDataUtils';
 import { NextResponse } from 'next/server';
 
 let data = {
@@ -4930,33 +4931,4 @@ export async function GET(request: Request) {
   const transformedData = transformCoinGeckoData(data);
 
   return NextResponse.json(transformedData);
-}
-
-
-function transformCoinGeckoData(data: CoinGeckoSingleResponse): AppCoinData {
-  return {
-    id: data.id,
-    symbol: data.symbol,
-    name: data.name,
-    web_slug: data.web_slug,
-    categories: data.categories,
-    image: {
-      thumb: data.image.thumb,
-      small: data.image.small,
-      large: data.image.large,
-    },
-    market_data: {
-      price_change_24h: data.market_data.price_change_24h,
-      price_change_percentage_24h: data.market_data.price_change_percentage_24h,
-      price_change_percentage_7d: data.market_data.price_change_percentage_7d,
-      price_change_percentage_14d: data.market_data.price_change_percentage_14d,
-      price_change_percentage_30d: data.market_data.price_change_percentage_30d,
-      price_change_percentage_60d: data.market_data.price_change_percentage_60d,
-      price_change_percentage_200d: data.market_data.price_change_percentage_200d,
-      price_change_percentage_1y: data.market_data.price_change_percentage_1y,
-      current_price: data.market_data.current_price.usd,
-      high_24h: data.market_data.high_24h.usd,
-      low_24h: data.market_data.low_24h.usd,
-    },
-  };
 }
