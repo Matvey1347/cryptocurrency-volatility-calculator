@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
 
-
 const FAKE_DATA = [
   {
     "id": "bitcoin",
@@ -291,19 +290,27 @@ const FAKE_DATA = [
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const search = searchParams.get('search');
-  const order = searchParams.get('order') || 'market_cap_desc';
-  const per_page = searchParams.get('per_page') || 10;
-  const page = searchParams.get('page') || 1;
+  // const order = searchParams.get('order') || 'market_cap_desc';
+  // const per_page = searchParams.get('per_page') || 10;
+  // const page = searchParams.get('page') || 1;
 
   // const response = await fetch(
   //   `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=${order}&per_page=${per_page}&page=${page}&search=${search}&sparkline=false`
   // );
+  const response = await fetch(
+    `https://api.coingecko.com/api/v3/search?query=${search}`
+  );
 
-  // if (!response.ok) {
-  //   return NextResponse.json({ error: 'Failed to fetch data from CoinGecko' }, { status: 500 });
-  // }
+  if (!response.ok) {
+    return NextResponse.json({ error: 'Failed to fetch data from CoinGecko' }, { status: 500 });
+  }
 
-  // const data = await response.json();
-  // return NextResponse.json(data);
-  return NextResponse.json(FAKE_DATA);
+  let data = await response.json();
+  if(!data.coins.length) {
+    data = FAKE_DATA;
+  } else {
+    data = data.coins;
+  }
+  return NextResponse.json(data);
+  // return NextResponse.json(FAKE_DATA);
 }

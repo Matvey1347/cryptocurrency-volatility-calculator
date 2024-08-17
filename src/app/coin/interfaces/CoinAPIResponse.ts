@@ -4,6 +4,7 @@ export interface CoinMarket {
   name: string;
   image: string;
   current_price: number;
+  large?: string;
 }
 
 export interface CoinGeckoSingleResponse {

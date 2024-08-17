@@ -20,7 +20,7 @@ export default function CoinList() {
         setPage={(page) => dispatch({ type: 'SET_PAGE', payload: page })}
         onSearch={fetchCoinsMarkets}
       />
-      <div className="flex justify-between items-center mb-4">
+      {/* <div className="flex justify-between items-center mb-4">
         <SortOrder
           sortOrder={state.sortOrder}
           setSortOrder={(order) => dispatch({ type: 'SET_SORT_ORDER', payload: order })}
@@ -31,7 +31,7 @@ export default function CoinList() {
           setPerPage={(perPage) => dispatch({ type: 'SET_PER_PAGE', payload: perPage })}
           setPage={(page) => dispatch({ type: 'SET_PAGE', payload: page })}
         />
-      </div>
+      </div> */}
       {state.loading ? (
         <Loader loading={state.loading} />
       ) : state.error ? (
@@ -40,10 +40,10 @@ export default function CoinList() {
         <List coins={state.coins} />
       )}
 
-      <PageNavigation
+      {/* <PageNavigation
         page={state.page}
         setPage={(page) => dispatch({ type: 'SET_PAGE', payload: page })}
-      />
+      /> */}
     </>
   );
 }
