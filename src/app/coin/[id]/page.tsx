@@ -47,7 +47,7 @@ export default function CoinPage({ params }: { params: { id: string } }) {
           onClick={handleApply}
           className="bg-blue-500 text-white rounded px-4 py-2"
         >
-          Применить
+          Apply
         </button>
       </div>
       {
