@@ -12,6 +12,9 @@ export default function CalculationData({ coinHistory }: CalculationDataProps) {
     return <h1 className="text-center text-gray-500">No Data Available</h1>;
   }
 
+  console.log('coinHistory', coinHistory);
+  
+
   const averageClosePrice = calculateAverageClosePrice(coinHistory);
 
   const highestClosePrice = Math.max(...coinHistory.map(day => day.close));
@@ -20,7 +23,7 @@ export default function CalculationData({ coinHistory }: CalculationDataProps) {
   const highestChangePercentage = ((highestClosePrice - averageClosePrice) / averageClosePrice) * 100;
   const lowestChangePercentage = ((lowestClosePrice - averageClosePrice) / averageClosePrice) * 100;
 
-  const volatilityCoefficient = (highestChangePercentage / 100) * (lowestChangePercentage / 100);
+  const volatilityCoefficient = (highestChangePercentage / 100) * (lowestChangePercentage / 100) * -1;
 
   return (
     <div className="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-md">

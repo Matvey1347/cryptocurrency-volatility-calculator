@@ -17,6 +17,8 @@ export default function DaysTable({ coinHistory }: DaysTableProps) {
             <th className="text-left p-4 font-medium text-gray-600">Date</th>
             <th className="text-left p-4 font-medium text-gray-600">Open</th>
             <th className="text-left p-4 font-medium text-gray-600">Close</th>
+            <th className="text-left p-4 font-medium text-gray-600">Volumefrom</th>
+            <th className="text-left p-4 font-medium text-gray-600">Volumeto</th>
           </tr>
         </thead>
         <tbody>
@@ -33,6 +35,12 @@ export default function DaysTable({ coinHistory }: DaysTableProps) {
               </td>
               <td className="p-4 text-red-500 font-semibold">
                 ${item.close}
+              </td>
+              <td className="p-4 font-semibold">
+                ${item.volumefrom}
+              </td>
+              <td className="p-4 font-semibold">
+                ${item.volumeto}
               </td>
             </tr>
           ))}
